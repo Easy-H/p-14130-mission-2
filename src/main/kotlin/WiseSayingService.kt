@@ -3,25 +3,32 @@ class WiseSayingService {
     private val wiseSayingRepository = WiseSayingRepository()
 
     fun get(id: Int) : WiseSaying? {
-        val idx = wiseSayingRepository.getIdx(id);
-        if (idx < 0) return null;
-        return wiseSayingRepository.getByIdx(idx);
+        return wiseSayingRepository.findById(id);
     }
 
     fun modify(wise: WiseSaying, author: String, content: String) {
-        wiseSayingRepository.modify(wise, author, content);
+        wise.author = author;
+        wise.content = content;
     }
 
     fun add(author: String, content: String) : WiseSaying {
-        return wiseSayingRepository.add(author, content);
+        return wiseSayingRepository.save(author, content);
     }
 
     fun delete(id: Int) : Boolean {
-        return wiseSayingRepository.delete(id);
+        return wiseSayingRepository.deleteById(id);
+    }
+
+    fun listByAuthor(keyword: String) : List<WiseSaying> {
+        return wiseSayingRepository.findAllByAuthorLike(keyword).reversed();
+    }
+
+    fun listByContent(keyword: String) : List<WiseSaying> {
+        return wiseSayingRepository.findAllByContentLike(keyword).reversed();
     }
 
     fun list() : List<WiseSaying> {
-        return wiseSayingRepository.getAll().reversed();
+        return wiseSayingRepository.findAll().reversed();
     }
 
 }

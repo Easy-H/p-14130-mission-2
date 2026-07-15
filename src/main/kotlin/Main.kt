@@ -21,18 +21,25 @@ fun main() {
             continue;
         }
         if (cmd.getType() == "목록") {
-            wiseSayingController.list()
+            wiseSayingController.list(
+                cmd.getParam("keywordType"),
+                cmd.getParam("keyword")
+            )
             continue;
         }
         if (cmd.getType() == "수정") {
             wiseSayingController.modify(
-                cmd.getParam("id")?.toInt() ?: 0);
+                cmd.getParamToInt("id", 0));
 
             continue;
         }
-
-        wiseSayingController.delete(
-            cmd.getParam("id")?.toInt() ?: 0);
+        if (cmd.getType() == "수정")
+        {
+            wiseSayingController.delete(
+                cmd.getParamToInt("id", 0));
+            continue;
+        }
+        println("잘못된 명령어입니다.");
 
     }
 

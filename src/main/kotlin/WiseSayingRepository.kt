@@ -3,25 +3,29 @@ class WiseSayingRepository {
     val wises = mutableListOf<WiseSaying>();
     var wiseCnt = 0;
 
-    fun modify(wise: WiseSaying, author: String, content: String) {
-        wise.author = author;
-        wise.content = content;
+    fun getIdx(id: Int) : Int {
+        return wises.indexOfFirst {
+                wise -> wise.num == id };
     }
 
-    fun getByIdx(idx: Int) : WiseSaying {
+    fun findById(id: Int) : WiseSaying? {
+        val idx = getIdx(id);
         return wises[idx];
     }
 
-    fun getAll() : List<WiseSaying> {
+    fun findAll() : List<WiseSaying> {
         return wises;
     }
 
-    fun getIdx(id: Int) : Int {
-        return wises.indexOfFirst {
-            wise -> wise.num == id };
+    fun findAllByAuthorLike(author: String): List<WiseSaying> {
+        return wises.filter { wise -> wise.author.contains(author) }
     }
 
-    fun add(author: String, content: String) : WiseSaying {
+    fun findAllByContentLike(content: String): List<WiseSaying> {
+        return wises.filter { wise -> wise.content.contains(content) }
+    }
+
+    fun save(author: String, content: String) : WiseSaying {
         val newWise = WiseSaying(
             ++wiseCnt, author, content);
 
@@ -30,7 +34,7 @@ class WiseSayingRepository {
 
     }
 
-    fun delete(id: Int) : Boolean {
+    fun deleteById(id: Int) : Boolean {
         val idx = getIdx(id);
         if (idx < 0) return false;
         wises.removeAt(idx);

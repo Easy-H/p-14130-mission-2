@@ -37,11 +37,37 @@ class WiseSayingController {
         println("${id}번 명언이 삭제되었습니다.")
     }
 
-    fun list() {
+    fun printKeywordInfo(keywordType: String, keyword: String) {
+        println("----------------------");
+        println("검색타입 : $keywordType");
+        println("검색어 : $keyword");
+        println("----------------------");
+
+    }
+
+    fun getList(keywordType: String?, keyword: String?) : List<WiseSaying> {
+
+        if (keywordType != null && keyword != null) {
+            if (keywordType == "author") {
+                printKeywordInfo("author", keyword)
+                return wiseSayingService.listByAuthor(keyword);
+            }
+            if (keywordType == "content") {
+                printKeywordInfo("content", keyword)
+                return wiseSayingService.listByContent(keyword);
+            }
+
+        }
+
+        return wiseSayingService.list();
+    }
+
+    fun list(keywordType: String?, keyword: String?) {
+        val wiseList = getList(keywordType, keyword);
         println("번호 / 작가 / 명언");
         println("----------------------");
 
-        for (wise in wiseSayingService.list()) {
+        for (wise in wiseList) {
             println("${wise.num} / ${wise.author} / ${wise.content} ");
         }
 
