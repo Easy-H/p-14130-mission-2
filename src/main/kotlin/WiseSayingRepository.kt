@@ -14,6 +14,7 @@ object WiseSayingRepository {
 
     fun findById(id: Int) : WiseSaying? {
         val idx = getIdx(id);
+        if (idx < 0) return null;
         return wises[idx];
     }
 
