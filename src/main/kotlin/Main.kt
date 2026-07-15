@@ -39,7 +39,7 @@ fun main() {
 
             continue;
         }
-        if (cmd.getType() == "수정")
+        if (cmd.getType() == "삭제")
         {
             WiseSayingController.delete(
                 cmd.getParamToInt("id", 0));
