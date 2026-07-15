@@ -1,10 +1,8 @@
-class WiseSayingController {
-
-    private val wiseSayingService = WiseSayingService();
+object WiseSayingController {
 
     fun modify(id: Int) {
 
-        val wise = wiseSayingService.get(id);
+        val wise = WiseSayingService.get(id);
         if (wise == null) {
             println("${id}번 명언은 존재하지 않습니다.")
             return;
@@ -17,7 +15,7 @@ class WiseSayingController {
         print("작가 : ")
         val author = readln();
 
-        wiseSayingService.modify(wise, author, content);
+        WiseSayingService.modify(wise, author, content);
     }
 
     fun add() {
@@ -25,12 +23,12 @@ class WiseSayingController {
         val content = readln();
         print("작가 : ")
         val author = readln();
-        val wise = wiseSayingService.add(author, content);
+        val wise = WiseSayingService.add(author, content);
         println("${wise.num}번 명언이 등록되었습니다.")
     }
 
     fun delete(id: Int) {
-        if (!wiseSayingService.delete(id)) {
+        if (!WiseSayingService.delete(id)) {
             println("${id}번 명언은 존재하지 않습니다.")
             return;
         }
@@ -45,31 +43,44 @@ class WiseSayingController {
 
     }
 
-    fun getList(keywordType: String?, keyword: String?) : List<WiseSaying> {
+    fun getList(keywordType: String?, keyword: String?, page: Int, size: Int) : Page<WiseSaying> {
 
         if (keywordType != null && keyword != null) {
             if (keywordType == "author") {
                 printKeywordInfo("author", keyword)
-                return wiseSayingService.listByAuthor(keyword);
+                return WiseSayingService.listByAuthor(keyword, page, size);
             }
             if (keywordType == "content") {
                 printKeywordInfo("content", keyword)
-                return wiseSayingService.listByContent(keyword);
+                return WiseSayingService.listByContent(keyword, page, size);
             }
 
         }
 
-        return wiseSayingService.list();
+        return WiseSayingService.list(page, size);
     }
 
-    fun list(keywordType: String?, keyword: String?) {
-        val wiseList = getList(keywordType, keyword);
+    fun getPageMarker(idx: Int, page: Int) : String {
+        return if (idx == page) "[$idx]" else "$idx"
+    }
+
+    fun list(keywordType: String?, keyword: String?, page: Int, size: Int) {
+        val wisePage = getList(keywordType, keyword, page, size);
         println("번호 / 작가 / 명언");
         println("----------------------");
 
-        for (wise in wiseList) {
+        for (wise in wisePage.element) {
             println("${wise.num} / ${wise.author} / ${wise.content} ");
         }
+
+        println("----------------------");
+        print("페이지 : ${getPageMarker(1, page)}")
+
+        for (i in 2..(wisePage.totalCnt / size)) {
+            print(" / ${getPageMarker(i, page)}")
+        }
+        println();
+
 
     }
 }

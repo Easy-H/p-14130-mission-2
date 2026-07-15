@@ -1,4 +1,8 @@
-class WiseSayingRepository {
+import kotlin.math.min
+
+class Page<T>(val element: List<T>, val totalCnt: Int) { }
+
+object WiseSayingRepository {
 
     val wises = mutableListOf<WiseSaying>();
     var wiseCnt = 0;
@@ -13,16 +17,24 @@ class WiseSayingRepository {
         return wises[idx];
     }
 
-    fun findAll() : List<WiseSaying> {
-        return wises;
+    fun makePage(wiseList: List<WiseSaying>, page: Int, size: Int) : Page<WiseSaying> {
+        return Page(wiseList.slice(
+            min((page - 1) * size, wiseList.size)..<min(page * size, wiseList.size)
+        ), wiseList.size)
     }
 
-    fun findAllByAuthorLike(author: String): List<WiseSaying> {
-        return wises.filter { wise -> wise.author.contains(author) }
+    fun findAll(page: Int, size: Int) : Page<WiseSaying> {
+        return makePage(wises.reversed(), page, size);
     }
 
-    fun findAllByContentLike(content: String): List<WiseSaying> {
-        return wises.filter { wise -> wise.content.contains(content) }
+    fun findAllByAuthorLike(author: String, page: Int, size: Int): Page<WiseSaying> {
+        val retval = wises.filter { wise -> wise.author.contains(author) }
+        return makePage(retval.reversed(), page, size);
+    }
+
+    fun findAllByContentLike(content: String, page: Int, size: Int): Page<WiseSaying> {
+        val retval = wises.filter { wise -> wise.content.contains(content) }
+        return makePage(retval.reversed(), page, size);
     }
 
     fun save(author: String, content: String) : WiseSaying {

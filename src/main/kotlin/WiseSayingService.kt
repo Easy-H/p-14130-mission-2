@@ -1,9 +1,7 @@
-class WiseSayingService {
-
-    private val wiseSayingRepository = WiseSayingRepository()
+object WiseSayingService {
 
     fun get(id: Int) : WiseSaying? {
-        return wiseSayingRepository.findById(id);
+        return WiseSayingRepository.findById(id);
     }
 
     fun modify(wise: WiseSaying, author: String, content: String) {
@@ -12,23 +10,23 @@ class WiseSayingService {
     }
 
     fun add(author: String, content: String) : WiseSaying {
-        return wiseSayingRepository.save(author, content);
+        return WiseSayingRepository.save(author, content);
     }
 
     fun delete(id: Int) : Boolean {
-        return wiseSayingRepository.deleteById(id);
+        return WiseSayingRepository.deleteById(id);
     }
 
-    fun listByAuthor(keyword: String) : List<WiseSaying> {
-        return wiseSayingRepository.findAllByAuthorLike(keyword).reversed();
+    fun listByAuthor(keyword: String, page: Int, size: Int) : Page<WiseSaying> {
+        return WiseSayingRepository.findAllByAuthorLike(keyword, page, size);
     }
 
-    fun listByContent(keyword: String) : List<WiseSaying> {
-        return wiseSayingRepository.findAllByContentLike(keyword).reversed();
+    fun listByContent(keyword: String, page: Int, size: Int) : Page<WiseSaying> {
+        return WiseSayingRepository.findAllByContentLike(keyword, page, size);
     }
 
-    fun list() : List<WiseSaying> {
-        return wiseSayingRepository.findAll().reversed();
+    fun list(page: Int, size: Int) : Page<WiseSaying> {
+        return WiseSayingRepository.findAll(page, size);
     }
 
 }
